@@ -27,6 +27,10 @@ function isValid(expression) {
 
   try {
     let firstExpressionResult = evaluate(subExpressions[0]);
+    // Make zero fewer
+    if (firstExpressionResult === 0 && Math.random() > 0.5) {
+      return false;
+    }
     for (let i = 1; i < subExpressions.length; i++) {
       const expression = subExpressions[i];
       if (evaluate(expression) !== firstExpressionResult) {
