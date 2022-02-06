@@ -17,7 +17,7 @@
   width: 56px;
   height: 56px;
   border-radius: 4px;
-  background: #44475a;
+  background: rgb(152, 148, 132);
   color: white;
   font-weight: bold;
 }
@@ -44,22 +44,22 @@
   box-sizing: border-box;
 }
 .messageContainer > div {
-  box-shadow: 0 0 0 2px #ff79c6;
   padding: 16px;
   width: 100%;
-  background: #282a36;
+  background: rgb(254, 205, 211);
   border-radius: 4px;
 }
 
 .messageRed {
 }
 .messageGreen > div {
-  box-shadow: 0 0 0 2px rgb(220 252 231);
+  background: rgb(220 252 231);
 }
 
 .newGameButton {
   padding: 10px;
-  background-color: #44475a;
+  background-color: rgb(79, 70, 229);
+  color: white;
   border: none;
   border-radius: 5px;
   margin: 10px 0;
@@ -72,7 +72,8 @@
 }
 
 .inputButton {
-  background: #44475a;
+  background: rgb(226, 232, 240);
+  font-weight: bold;
   padding: 10px;
   border-radius: 4px;
   cursor: pointer;
