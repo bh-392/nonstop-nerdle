@@ -158,7 +158,7 @@ const App = () => {
   }, [handleKeyDown]);
 
   const handleNewGameButtonClick = () => {
-    if (window.confirm("Are you sure to open a new game?")) {
+    if (window.confirm("Are you sure to start a new game?")) {
       let expression;
       do {
         expression = generateExpression();
@@ -242,14 +242,26 @@ const Message = ({ message, won, isGamePaused, answer }) => {
   if (won) {
     return (
       <div className={`${styles.messageContainer} ${styles.messageGreen}`}>
-        <div>You Won!</div>
+        <div>
+          You won! 🥳
+          <br />
+          Click the "New Game" button below to start a new game.
+        </div>
       </div>
     );
   }
   return (
     <div className={styles.messageContainer}>
       <div>
-        {isGamePaused ? `You lost, the answer was ${answer}` : message.content}
+        {isGamePaused ? (
+          <>
+            You lost. 😢
+            <br />
+            The answer was {answer}
+          </>
+        ) : (
+          message.content
+        )}
       </div>
     </div>
   );
