@@ -1,0 +1,78 @@
+.rowContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.current,
+.row {
+  display: flex;
+  gap: 4px;
+}
+
+.block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  background: #44475a;
+  color: white;
+  font-weight: bold;
+}
+
+.block-in-solution-correct-spot {
+  background: rgb(57, 136, 116);
+}
+
+.block-in-solution-wrong-spot-1 {
+  background: rgb(130, 4, 88);
+}
+
+.block-not-in-solution {
+  background: rgb(22, 24, 3);
+}
+
+.messageContainer {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  display: flex;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.messageContainer > div {
+  box-shadow: 0 0 0 2px #ff79c6;
+  padding: 16px;
+  width: 100%;
+  background: #282a36;
+  border-radius: 4px;
+}
+
+.messageRed {
+}
+.messageGreen > div {
+  box-shadow: 0 0 0 2px rgb(220 252 231);
+}
+
+.newGameButton {
+  padding: 10px;
+  background-color: #44475a;
+  border: none;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.inputButtonsContainer {
+  margin: 10px 0;
+  display: flex;
+  gap: 5px;
+}
+
+.inputButton {
+  background: #44475a;
+  padding: 10px;
+  border-radius: 4px;
+}
