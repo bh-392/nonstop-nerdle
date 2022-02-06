@@ -127,6 +127,11 @@ const App = () => {
           compareUserInputAndAnswer(userInput, answer),
         ]);
       } else {
+        setUserInput("");
+        setHistoryList((prevValue) => [
+          ...prevValue,
+          compareUserInputAndAnswer(userInput, answer),
+        ]);
         setMessage({ type: "success", content: "You Won!" });
         setWon(true);
       }
