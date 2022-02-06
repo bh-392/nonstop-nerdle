@@ -181,8 +181,8 @@ const App = () => {
       <h1>Nonstop Nerdle</h1>
       <div className={styles.rowContainer}>
         <HistoryList historyList={historyList} />
-        {(!isGamePaused || won) && <UserInput userInput={userInput} />}
-        <PlaceholderBlocks historyList={historyList} />
+        {(!isGamePaused || !won) && <UserInput userInput={userInput} />}
+        <PlaceholderBlocks historyList={historyList} won={won} />
       </div>
       <Inputs handleKeyDown={handleKeyDown} />
       <NewGameButton handleNewGameButtonClick={handleNewGameButtonClick} />
@@ -212,8 +212,11 @@ const UserInput = ({ userInput }) => {
   return <Row data={rowData} />;
 };
 
-const PlaceholderBlocks = ({ historyList }) => {
-  const numOfRows = NUM_OF_ATTEMPTS - historyList.length - 1;
+const PlaceholderBlocks = ({ historyList, won }) => {
+  let numOfRows = NUM_OF_ATTEMPTS - historyList.length - 1;
+  if (won) {
+    numOfRows++;
+  }
   return numOfRows > 0
     ? new Array(numOfRows).fill(null).map((_, i) => <DummyRow key={i} />)
     : null;
