@@ -278,7 +278,7 @@ const Inputs = ({ handleKeyDown }) => {
         ))}
       </div>
       <div className={styles.inputButtonsContainer}>
-        {"+-*/"
+        {"+-*/="
           .split("")
           .concat("Enter", "Delete")
           .map((v) => (
