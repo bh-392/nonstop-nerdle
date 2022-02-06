@@ -190,6 +190,7 @@ const App = () => {
       </div>
       <Inputs handleKeyDown={handleKeyDown} />
       <NewGameButton handleNewGameButtonClick={handleNewGameButtonClick} />
+      <div>Special thanks: Amber Tseng</div>
       {/* <div>Share</div> */}
       {(message || isGamePaused) && (
         <Message
