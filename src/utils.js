@@ -8,6 +8,7 @@ function generateNewAnswer() {
     answer = generateExpression();
   } while (
     !isValidEquation(answer) ||
+    hasNumberStartsWithMultipleZeros(answer) ||
     (isAnswerZero(answer) && Math.random() > 0.25)
   );
 
@@ -43,6 +44,10 @@ function isValidEquation(expression) {
   } catch (e) {
     return false;
   }
+}
+
+function hasNumberStartsWithMultipleZeros(answer) {
+  return ~answer.search(/[^\d]0+/);
 }
 
 function isAnswerZero(answer) {
