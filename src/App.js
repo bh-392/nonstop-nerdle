@@ -7,6 +7,7 @@ import {
 import { useState, useEffect, useCallback } from "react";
 import styles from "./App.module.css";
 import { generateNewAnswer, isValidEquation } from "./utils";
+import Message from "./components/Message";
 
 function compareUserInputAndAnswer(guess, answer) {
   const result = guess.split("").map((value) => ({ value, state: null }));
@@ -66,9 +67,11 @@ let messageTimer;
 
 const App = () => {
   const [answer, setAnswer] = useState(null);
-  const [userInput, setUserInput] = useState("");
-  const [historyList, setHistoryList] = useState([]);
+  const [currentGuess, setCurrentGuess] = useState("");
   const [message, setMessage] = useState(null);
+  //
+  const [historyList, setHistoryList] = useState([]);
+  //
   const [won, setWon] = useState(false);
   const isGamePaused = historyList.length === NUM_OF_ATTEMPTS || won;
 
@@ -78,52 +81,50 @@ const App = () => {
     console.log(newAnswer);
   }, []);
 
-  const guess = useCallback(
-    (userInput) => {
-      if (
-        userInput.length !== NUM_OF_BLOCKS_PER_ROW ||
-        !isValidEquation(userInput)
-      ) {
-        clearTimeout(messageTimer);
-        setMessage({ type: "error", content: "The guess doesn't compute" });
-        messageTimer = setTimeout(() => setMessage(null), 3000);
-        return;
-      }
-      if (userInput !== answer) {
-        setUserInput("");
-        setHistoryList((prevValue) => [
-          ...prevValue,
-          compareUserInputAndAnswer(userInput, answer),
-        ]);
-      } else {
-        setUserInput("");
-        setHistoryList((prevValue) => [
-          ...prevValue,
-          compareUserInputAndAnswer(userInput, answer),
-        ]);
-        setMessage({ type: "success", content: "You Won!" });
-        setWon(true);
-      }
-    },
-    [answer]
-  );
+  const doGuess = useCallback(() => {
+    if (
+      currentGuess.length !== NUM_OF_BLOCKS_PER_ROW ||
+      !isValidEquation(currentGuess)
+    ) {
+      clearTimeout(messageTimer);
+      setMessage({ type: "error", content: "The guess doesn't compute" });
+      messageTimer = setTimeout(() => setMessage(null), 3000);
+      return;
+    }
+
+    if (currentGuess !== answer) {
+      setCurrentGuess("");
+      setHistoryList((prevValue) => [
+        ...prevValue,
+        compareUserInputAndAnswer(currentGuess, answer),
+      ]);
+    } else {
+      setCurrentGuess("");
+      setHistoryList((prevValue) => [
+        ...prevValue,
+        compareUserInputAndAnswer(currentGuess, answer),
+      ]);
+      setMessage({ type: "success", content: "You Won!" });
+      setWon(true);
+    }
+  }, [currentGuess, answer]);
 
   const handleKeyDown = useCallback(
     ({ key }) => {
-      if (isGamePaused) {
-        return;
+      if (TOKENS.includes(key) && currentGuess.length < NUM_OF_BLOCKS_PER_ROW) {
+        setCurrentGuess((prevValue) => `${prevValue}${key}`);
       }
-      if (TOKENS.includes(key) && userInput.length < NUM_OF_BLOCKS_PER_ROW) {
-        setUserInput((prevValue) => `${prevValue}${key}`);
-      }
-      if ((key === "Backspace" || key === "Delete") && userInput.length > 0) {
-        setUserInput((prevValue) => prevValue.slice(0, -1));
+      if (
+        (key === "Backspace" || key === "Delete") &&
+        currentGuess.length > 0
+      ) {
+        setCurrentGuess((prevValue) => prevValue.slice(0, -1));
       }
       if (key === "Enter") {
-        guess(userInput);
+        doGuess();
       }
     },
-    [guess, isGamePaused, userInput]
+    [currentGuess, doGuess]
   );
 
   useEffect(() => {
@@ -135,7 +136,7 @@ const App = () => {
     if (window.confirm("Are you sure to start a new game?")) {
       let newAnswer = generateNewAnswer();
       setAnswer(newAnswer);
-      setUserInput("");
+      setCurrentGuess("");
       setHistoryList([]);
       setMessage(null);
       setWon(false);
@@ -148,7 +149,7 @@ const App = () => {
         <h1>Nonstop Nerdle</h1>
         <div className={styles.rowContainer}>
           <HistoryList historyList={historyList} />
-          {(!isGamePaused || !won) && <UserInput userInput={userInput} />}
+          {(!isGamePaused || !won) && <UserInput userInput={currentGuess} />}
           <PlaceholderBlocks historyList={historyList} won={won} />
         </div>
         <Inputs handleKeyDown={handleKeyDown} />
@@ -211,35 +212,6 @@ const DummyRow = () => {
           {" "}
         </div>
       ))}
-    </div>
-  );
-};
-
-const Message = ({ message, won, isGamePaused, answer }) => {
-  if (won) {
-    return (
-      <div className={`${styles.messageContainer} ${styles.messageGreen}`}>
-        <div>
-          You won! 🥳
-          <br />
-          Click the "New Game" button below to start a new game.
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className={styles.messageContainer}>
-      <div>
-        {isGamePaused ? (
-          <>
-            You lost. 😢
-            <br />
-            The answer was {answer}
-          </>
-        ) : (
-          message.content
-        )}
-      </div>
     </div>
   );
 };

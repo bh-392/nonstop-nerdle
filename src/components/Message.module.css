@@ -1,0 +1,20 @@
+.container {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  display: flex;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.container > div {
+  padding: 16px;
+  width: 100%;
+  background: rgb(254, 205, 211);
+  border-radius: 4px;
+}
+
+.green > div {
+  background: rgb(220 252 231);
+}

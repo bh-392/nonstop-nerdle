@@ -7,7 +7,7 @@
 .innerContainer {
   display: flex;
   flex-direction: column;
-  padding: 0 4px;
+  padding: 0 10px;
   width: 450px;
 }
 
@@ -48,27 +48,6 @@
 
 .block-not-in-solution {
   background: rgb(22, 24, 3);
-}
-
-.messageContainer {
-  position: fixed;
-  top: 20px;
-  left: 0;
-  display: flex;
-  padding: 16px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.messageContainer > div {
-  padding: 16px;
-  width: 100%;
-  background: rgb(254, 205, 211);
-  border-radius: 4px;
-}
-
-.messageGreen > div {
-  background: rgb(220 252 231);
 }
 
 .newGameButton {
