@@ -1,9 +1,7 @@
+@import-normalize;
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
-* {
-  font-family: "Roboto", sans-serif;
-}
-
 body {
-  padding-bottom: 40px;
+  font-family: "Roboto", sans-serif;
+  margin: 0;
 }

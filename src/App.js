@@ -183,7 +183,7 @@ const App = () => {
   };
 
   return (
-    <>
+    <div className={styles.container}>
       <h1>Nonstop Nerdle</h1>
       <div className={styles.rowContainer}>
         <HistoryList historyList={historyList} />
@@ -202,7 +202,7 @@ const App = () => {
           message={message}
         />
       )}
-    </>
+    </div>
   );
 };
 
