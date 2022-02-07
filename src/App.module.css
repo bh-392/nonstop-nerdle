@@ -21,25 +21,3 @@
   grid-template-columns: repeat(2, 1fr);
   margin-bottom: 5px;
 }
-
-.inputButtonsContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin: 10px 0;
-}
-
-.inputButtonsRow {
-  display: flex;
-  gap: 5px;
-}
-
-.inputButton {
-  background: rgb(226, 232, 240);
-  border-radius: 4px;
-  cursor: pointer;
-  flex-grow: 1;
-  font-weight: bold;
-  padding: 15px 0;
-  text-align: center;
-}

@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.row {
+  display: flex;
+  gap: 5px;
+}
+
+.button {
+  background: rgb(226, 232, 240);
+  border-radius: 4px;
+  cursor: pointer;
+  flex-grow: 1;
+  font-weight: bold;
+  padding: 15px 0;
+  text-align: center;
+}
+
+.button-in-solution-correct-spot {
+  background: rgb(57, 136, 116);
+  color: white;
+}
+
+.button-in-solution-wrong-spot {
+  background: rgb(130, 4, 88);
+  color: white;
+}
+
+.button-not-in-solution {
+  background: rgb(22, 24, 3);
+  color: white;
+}

@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   GAME_STATE,
+  KEYBOARD_FIRST_ROW_BUTTONS,
+  KEYBOARD_SECOND_ROW_BUTTONS,
+  KEYBOARD_BUTTON_STATE,
+  BLOCK_STATE,
   NUM_OF_BLOCKS_PER_ROW,
   NUM_OF_ATTEMPTS,
   TOKENS,
@@ -11,6 +15,7 @@ import {
   getHistoryByGuessAndAnswer,
 } from "./utils";
 import RowContainer from "./components/RowContainer";
+import Keyboard from "./Keyboard";
 import NewGameButton from "./components/NewGameButton";
 import CopyLinkButton from "./components/CopyLinkButton";
 import Message from "./components/Message";
@@ -23,12 +28,59 @@ const App = () => {
   const [answer, setAnswer] = useState(null);
   const [currentGuess, setCurrentGuess] = useState("");
   const [historyList, setHistoryList] = useState([]);
+  const [keyboardFirstRowButtons, setKeyboardFirstRowButtons] = useState(
+    KEYBOARD_FIRST_ROW_BUTTONS.map((value) => ({
+      value,
+      state: KEYBOARD_BUTTON_STATE.INITIAL,
+    }))
+  );
+  const [keyboardSecondRowButtons, setKeyboardSecondRowButtons] = useState(
+    KEYBOARD_SECOND_ROW_BUTTONS.map((value) => ({
+      value,
+      state: KEYBOARD_BUTTON_STATE.INITIAL,
+    }))
+  );
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const newAnswer = generateNewAnswer();
     setAnswer(newAnswer);
     console.log(newAnswer);
+  }, []);
+
+  const reduceKeyboardStateHelper = (newHistory, blockState, buttonState) => {
+    newHistory
+      .filter((history) => history.state === blockState)
+      .forEach(({ value }) => {
+        setKeyboardFirstRowButtons((prevState) =>
+          prevState.map((button) =>
+            button.value === value ? { ...button, state: buttonState } : button
+          )
+        );
+        setKeyboardSecondRowButtons((prevState) =>
+          prevState.map((button) =>
+            button.value === value ? { ...button, state: buttonState } : button
+          )
+        );
+      });
+  };
+
+  const reduceKeyboardState = useCallback((newHistory) => {
+    reduceKeyboardStateHelper(
+      newHistory,
+      BLOCK_STATE.NOT_IN_SOLUTION,
+      KEYBOARD_BUTTON_STATE.NOT_IN_SOLUTION
+    );
+    reduceKeyboardStateHelper(
+      newHistory,
+      BLOCK_STATE.IN_SOLUTION.CORRECT_SPOT,
+      KEYBOARD_BUTTON_STATE.IN_SOLUTION.CORRECT_SPOT
+    );
+    reduceKeyboardStateHelper(
+      newHistory,
+      BLOCK_STATE.IN_SOLUTION.WRONG_SPOT,
+      KEYBOARD_BUTTON_STATE.IN_SOLUTION.WRONG_SPOT
+    );
   }, []);
 
   const doGuess = useCallback(() => {
@@ -44,6 +96,7 @@ const App = () => {
 
     const newHistory = getHistoryByGuessAndAnswer(currentGuess, answer);
     setHistoryList((prevValue) => [...prevValue, newHistory]);
+    reduceKeyboardState(newHistory);
     setCurrentGuess("");
 
     if (currentGuess === answer) {
@@ -71,7 +124,7 @@ const App = () => {
         ),
       });
     }
-  }, [currentGuess, answer, historyList]);
+  }, [currentGuess, answer, reduceKeyboardState, historyList]);
 
   const handleKeyDown = useCallback(
     ({ key }) => {
@@ -107,6 +160,18 @@ const App = () => {
       setAnswer(newAnswer);
       setCurrentGuess("");
       setHistoryList([]);
+      setKeyboardFirstRowButtons(
+        KEYBOARD_FIRST_ROW_BUTTONS.map((value) => ({
+          value,
+          state: KEYBOARD_BUTTON_STATE.INITIAL,
+        }))
+      );
+      setKeyboardSecondRowButtons(
+        KEYBOARD_SECOND_ROW_BUTTONS.map((value) => ({
+          value,
+          state: KEYBOARD_BUTTON_STATE.INITIAL,
+        }))
+      );
       setMessage(null);
     }
   };
@@ -120,45 +185,17 @@ const App = () => {
           currentGuess={currentGuess}
           historyList={historyList}
         />
-        <Inputs handleKeyDown={handleKeyDown} />
+        <Keyboard
+          firstRowButtons={keyboardFirstRowButtons}
+          secondRowButtons={keyboardSecondRowButtons}
+          handleKeyDown={handleKeyDown}
+        />
         <div className={styles.buttonsContainer}>
           <NewGameButton startNewGame={startNewGame} />
           <CopyLinkButton setMessage={setMessage} />
         </div>
 
         {message && <Message message={message} />}
-      </div>
-    </div>
-  );
-};
-
-const Inputs = ({ handleKeyDown }) => {
-  return (
-    <div className={styles.inputButtonsContainer}>
-      <div className={styles.inputButtonsRow}>
-        {"1234567890".split("").map((v) => (
-          <div
-            key={v}
-            className={styles.inputButton}
-            onClick={() => handleKeyDown({ key: v })}
-          >
-            {v}
-          </div>
-        ))}
-      </div>
-      <div className={styles.inputButtonsRow}>
-        {"+-*/="
-          .split("")
-          .concat("Enter", "Delete")
-          .map((v) => (
-            <div
-              key={v}
-              className={styles.inputButton}
-              onClick={() => handleKeyDown({ key: v })}
-            >
-              {v}
-            </div>
-          ))}
       </div>
     </div>
   );
