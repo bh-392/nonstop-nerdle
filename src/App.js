@@ -4,46 +4,9 @@ import {
   BLOCK_TYPE,
   NUM_OF_ATTEMPTS,
 } from "./constants";
-import { evaluate } from "mathjs";
 import { useState, useEffect, useCallback } from "react";
 import styles from "./App.module.css";
-
-function generateExpression() {
-  return new Array(NUM_OF_BLOCKS_PER_ROW)
-    .fill(null)
-    .map(() => getRandomElement(TOKENS))
-    .join("");
-}
-
-function getRandomElement(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function isValid(expression) {
-  const subExpressions = expression.split("=");
-  if (subExpressions.length < 2 || subExpressions.includes("")) {
-    return false;
-  }
-
-  try {
-    let firstExpressionResult = evaluate(subExpressions[0]);
-    /*
-    // Make zero fewer
-    if (firstExpressionResult === 0 && Math.random() > 0.5) {
-      return false;
-    }
-    */
-    for (let i = 1; i < subExpressions.length; i++) {
-      const expression = subExpressions[i];
-      if (evaluate(expression) !== firstExpressionResult) {
-        return false;
-      }
-    }
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+import { generateNewAnswer, isValidEquation } from "./utils";
 
 function compareUserInputAndAnswer(guess, answer) {
   const result = guess.split("").map((value) => ({ value, state: null }));
@@ -110,17 +73,17 @@ const App = () => {
   const isGamePaused = historyList.length === NUM_OF_ATTEMPTS || won;
 
   useEffect(() => {
-    let expression;
-    do {
-      expression = generateExpression();
-    } while (!isValid(expression));
-    setAnswer(expression);
-    console.log(expression);
+    const newAnswer = generateNewAnswer();
+    setAnswer(newAnswer);
+    console.log(newAnswer);
   }, []);
 
   const guess = useCallback(
     (userInput) => {
-      if (userInput.length !== NUM_OF_BLOCKS_PER_ROW || !isValid(userInput)) {
+      if (
+        userInput.length !== NUM_OF_BLOCKS_PER_ROW ||
+        !isValidEquation(userInput)
+      ) {
         clearTimeout(messageTimer);
         setMessage({ type: "error", content: "The guess doesn't compute" });
         messageTimer = setTimeout(() => setMessage(null), 3000);
@@ -170,11 +133,8 @@ const App = () => {
 
   const handleNewGameButtonClick = () => {
     if (window.confirm("Are you sure to start a new game?")) {
-      let expression;
-      do {
-        expression = generateExpression();
-      } while (!isValid(expression));
-      setAnswer(expression);
+      let newAnswer = generateNewAnswer();
+      setAnswer(newAnswer);
       setUserInput("");
       setHistoryList([]);
       setMessage(null);
@@ -183,26 +143,28 @@ const App = () => {
   };
 
   return (
-    <>
-      <h1>Nonstop Nerdle</h1>
-      <div className={styles.rowContainer}>
-        <HistoryList historyList={historyList} />
-        {(!isGamePaused || !won) && <UserInput userInput={userInput} />}
-        <PlaceholderBlocks historyList={historyList} won={won} />
+    <div className={styles.outerContainer}>
+      <div className={styles.innerContainer}>
+        <h1>Nonstop Nerdle</h1>
+        <div className={styles.rowContainer}>
+          <HistoryList historyList={historyList} />
+          {(!isGamePaused || !won) && <UserInput userInput={userInput} />}
+          <PlaceholderBlocks historyList={historyList} won={won} />
+        </div>
+        <Inputs handleKeyDown={handleKeyDown} />
+        <NewGameButton handleNewGameButtonClick={handleNewGameButtonClick} />
+        <div>Special thanks: Amber Tseng</div>
+        {/* <div>Share</div> */}
+        {(message || isGamePaused) && (
+          <Message
+            isGamePaused={isGamePaused}
+            won={won}
+            answer={answer}
+            message={message}
+          />
+        )}
       </div>
-      <Inputs handleKeyDown={handleKeyDown} />
-      <NewGameButton handleNewGameButtonClick={handleNewGameButtonClick} />
-      <div>Special thanks: Amber Tseng</div>
-      {/* <div>Share</div> */}
-      {(message || isGamePaused) && (
-        <Message
-          isGamePaused={isGamePaused}
-          won={won}
-          answer={answer}
-          message={message}
-        />
-      )}
-    </>
+    </div>
   );
 };
 

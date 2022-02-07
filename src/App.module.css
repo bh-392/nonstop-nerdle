@@ -1,25 +1,41 @@
+.outerContainer {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.innerContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 0 4px;
+  width: 450px;
+}
+
+.innerContainer h1 {
+  margin-bottom: 10px;
+}
+
 .rowContainer {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.current,
 .row {
-  display: flex;
+  display: grid;
   gap: 4px;
+  grid-template-columns: repeat(8, 1fr);
 }
 
 .block {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
   border-radius: 4px;
   background: rgb(152, 148, 132);
   color: white;
   font-weight: bold;
+  aspect-ratio: 1;
 }
 
 .block-in-solution-correct-spot {
@@ -43,6 +59,7 @@
   width: 100%;
   box-sizing: border-box;
 }
+
 .messageContainer > div {
   padding: 16px;
   width: 100%;
@@ -50,8 +67,6 @@
   border-radius: 4px;
 }
 
-.messageRed {
-}
 .messageGreen > div {
   background: rgb(220 252 231);
 }
@@ -69,6 +84,7 @@
   margin: 10px 0;
   display: flex;
   gap: 5px;
+  max-width: 100vw;
 }
 
 .inputButton {
@@ -77,4 +93,6 @@
   padding: 10px;
   border-radius: 4px;
   cursor: pointer;
+  flex-grow: 1;
+  text-align: center;
 }
