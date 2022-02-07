@@ -11,10 +11,13 @@
 .container > div {
   padding: 16px;
   width: 100%;
-  background: rgb(254, 205, 211);
   border-radius: 4px;
 }
 
-.green > div {
+.error > div {
+  background: rgb(254, 205, 211);
+}
+
+.success > div {
   background: rgb(220 252 231);
 }

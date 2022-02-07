@@ -1,60 +1,31 @@
+import { useState, useEffect, useCallback } from "react";
 import {
+  GAME_STATE,
   NUM_OF_BLOCKS_PER_ROW,
   TOKENS,
-  BLOCK_TYPE,
+  BLOCK_STATE,
   NUM_OF_ATTEMPTS,
 } from "./constants";
-import { useState, useEffect, useCallback } from "react";
-import styles from "./App.module.css";
-import { generateNewAnswer, isValidEquation } from "./utils";
+import {
+  generateNewAnswer,
+  isValidEquation,
+  getHistoryByGuessAndAnswer,
+} from "./utils";
 import Message from "./components/Message";
-
-function compareUserInputAndAnswer(guess, answer) {
-  const result = guess.split("").map((value) => ({ value, state: null }));
-  const guessCollection = {};
-  const answerCollection = {};
-
-  for (let i = 0; i < NUM_OF_BLOCKS_PER_ROW; i++) {
-    const guessToken = guess[i];
-    const answerToken = answer[i];
-
-    if (guessToken === answerToken) {
-      result[i].state = BLOCK_TYPE.IN_SOLUTION.CORRECT_SPOT;
-    } else {
-      guessCollection[guessToken] = (guessCollection[guessToken] || 0) + 1;
-      answerCollection[answerToken] = (answerCollection[answerToken] || 0) + 1;
-    }
-  }
-
-  for (let i = 0; i < NUM_OF_BLOCKS_PER_ROW; i++) {
-    if (result[i].state !== null) {
-      continue;
-    }
-
-    const guessToken = guess[i];
-    if (guessToken in answerCollection && answerCollection[guessToken] > 0) {
-      result[i].state = BLOCK_TYPE.IN_SOLUTION.WRONG_SPOT;
-      answerCollection[guessToken]--;
-    } else {
-      result[i].state = BLOCK_TYPE.NOT_IN_SOLUTION;
-    }
-  }
-
-  return result;
-}
+import styles from "./App.module.css";
 
 function getBlockClassNameByState(state) {
   const baseClassName = styles.block;
 
   let additionalClassName;
   switch (state) {
-    case BLOCK_TYPE.IN_SOLUTION.CORRECT_SPOT:
+    case BLOCK_STATE.IN_SOLUTION.CORRECT_SPOT:
       additionalClassName = styles["block-in-solution-correct-spot"];
       break;
-    case BLOCK_TYPE.IN_SOLUTION.WRONG_SPOT:
+    case BLOCK_STATE.IN_SOLUTION.WRONG_SPOT:
       additionalClassName = styles["block-in-solution-wrong-spot"];
       break;
-    case BLOCK_TYPE.NOT_IN_SOLUTION:
+    case BLOCK_STATE.NOT_IN_SOLUTION:
       additionalClassName = styles["block-not-in-solution"];
       break;
     default:
@@ -66,14 +37,11 @@ function getBlockClassNameByState(state) {
 let messageTimer;
 
 const App = () => {
+  const [gameState, setGameState] = useState(GAME_STATE.RUNNING);
   const [answer, setAnswer] = useState(null);
   const [currentGuess, setCurrentGuess] = useState("");
-  const [message, setMessage] = useState(null);
-  //
   const [historyList, setHistoryList] = useState([]);
-  //
-  const [won, setWon] = useState(false);
-  const isGamePaused = historyList.length === NUM_OF_ATTEMPTS || won;
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const newAnswer = generateNewAnswer();
@@ -87,30 +55,47 @@ const App = () => {
       !isValidEquation(currentGuess)
     ) {
       clearTimeout(messageTimer);
-      setMessage({ type: "error", content: "The guess doesn't compute" });
+      setMessage({ type: "error", content: "The guess doesn't compute." });
       messageTimer = setTimeout(() => setMessage(null), 3000);
       return;
     }
 
-    if (currentGuess !== answer) {
-      setCurrentGuess("");
-      setHistoryList((prevValue) => [
-        ...prevValue,
-        compareUserInputAndAnswer(currentGuess, answer),
-      ]);
-    } else {
-      setCurrentGuess("");
-      setHistoryList((prevValue) => [
-        ...prevValue,
-        compareUserInputAndAnswer(currentGuess, answer),
-      ]);
-      setMessage({ type: "success", content: "You Won!" });
-      setWon(true);
+    const newHistory = getHistoryByGuessAndAnswer(currentGuess, answer);
+    setHistoryList((prevValue) => [...prevValue, newHistory]);
+    setCurrentGuess("");
+
+    if (currentGuess === answer) {
+      setGameState(GAME_STATE.WON);
+      setMessage({
+        type: "success",
+        content: (
+          <>
+            You won! 🥳
+            <br />
+            Click the "New Game" button below to start a new game.
+          </>
+        ),
+      });
+    } else if (historyList.length + 1 === NUM_OF_ATTEMPTS) {
+      setGameState(GAME_STATE.LOST);
+      setMessage({
+        type: "error",
+        content: (
+          <>
+            You lost. 😢
+            <br />
+            The answer was {answer}.
+          </>
+        ),
+      });
     }
-  }, [currentGuess, answer]);
+  }, [currentGuess, answer, historyList]);
 
   const handleKeyDown = useCallback(
     ({ key }) => {
+      if (gameState !== GAME_STATE.RUNNING) {
+        return;
+      }
       if (TOKENS.includes(key) && currentGuess.length < NUM_OF_BLOCKS_PER_ROW) {
         setCurrentGuess((prevValue) => `${prevValue}${key}`);
       }
@@ -124,7 +109,7 @@ const App = () => {
         doGuess();
       }
     },
-    [currentGuess, doGuess]
+    [gameState, currentGuess, doGuess]
   );
 
   useEffect(() => {
@@ -134,12 +119,13 @@ const App = () => {
 
   const handleNewGameButtonClick = () => {
     if (window.confirm("Are you sure to start a new game?")) {
-      let newAnswer = generateNewAnswer();
+      const newAnswer = generateNewAnswer();
+
+      setGameState(GAME_STATE.RUNNING);
       setAnswer(newAnswer);
       setCurrentGuess("");
       setHistoryList([]);
       setMessage(null);
-      setWon(false);
     }
   };
 
@@ -149,21 +135,16 @@ const App = () => {
         <h1>Nonstop Nerdle</h1>
         <div className={styles.rowContainer}>
           <HistoryList historyList={historyList} />
-          {(!isGamePaused || !won) && <UserInput userInput={currentGuess} />}
-          <PlaceholderBlocks historyList={historyList} won={won} />
+          {gameState === GAME_STATE.RUNNING && (
+            <UserInput userInput={currentGuess} />
+          )}
+          <PlaceholderRows gameState={gameState} historyList={historyList} />
         </div>
         <Inputs handleKeyDown={handleKeyDown} />
         <NewGameButton handleNewGameButtonClick={handleNewGameButtonClick} />
         <div>Special thanks: Amber Tseng</div>
         {/* <div>Share</div> */}
-        {(message || isGamePaused) && (
-          <Message
-            isGamePaused={isGamePaused}
-            won={won}
-            answer={answer}
-            message={message}
-          />
-        )}
+        {message && <Message message={message} />}
       </div>
     </div>
   );
@@ -178,17 +159,22 @@ const UserInput = ({ userInput }) => {
     NUM_OF_BLOCKS_PER_ROW - userInput.length
   )}`
     .split("")
-    .map((value) => ({ value, state: BLOCK_TYPE.UNDEFINED }));
+    .map((value) => ({ value, state: BLOCK_STATE.UNDEFINED }));
   return <Row data={rowData} />;
 };
 
-const PlaceholderBlocks = ({ historyList, won }) => {
-  let numOfRows = NUM_OF_ATTEMPTS - historyList.length - 1;
-  if (won) {
-    numOfRows++;
+const PlaceholderRows = ({ gameState, historyList }) => {
+  if (gameState === GAME_STATE.LOST) {
+    return null;
   }
+
+  let numOfRows = NUM_OF_ATTEMPTS - historyList.length;
+  if (gameState === GAME_STATE.RUNNING) {
+    numOfRows--;
+  }
+
   return numOfRows > 0
-    ? new Array(numOfRows).fill(null).map((_, i) => <DummyRow key={i} />)
+    ? new Array(numOfRows).fill(null).map((_, i) => <PlaceholderRow key={i} />)
     : null;
 };
 
@@ -204,11 +190,14 @@ const Row = ({ data }) => {
   );
 };
 
-const DummyRow = () => {
+const PlaceholderRow = () => {
   return (
     <div className={styles.row}>
       {new Array(NUM_OF_BLOCKS_PER_ROW).fill(null).map((_, i) => (
-        <div key={i} className={getBlockClassNameByState(BLOCK_TYPE.UNDEFINED)}>
+        <div
+          key={i}
+          className={getBlockClassNameByState(BLOCK_STATE.UNDEFINED)}
+        >
           {" "}
         </div>
       ))}

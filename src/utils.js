@@ -1,4 +1,4 @@
-import { NUM_OF_BLOCKS_PER_ROW, TOKENS } from "./constants";
+import { NUM_OF_BLOCKS_PER_ROW, TOKENS, BLOCK_STATE } from "./constants";
 import { evaluate } from "mathjs";
 
 function generateNewAnswer() {
@@ -42,4 +42,38 @@ function isValidEquation(expression) {
   }
 }
 
-export { generateNewAnswer, isValidEquation };
+function getHistoryByGuessAndAnswer(guess, answer) {
+  const history = guess.split("").map((value) => ({ value, state: null }));
+  const guessCollection = {};
+  const answerCollection = {};
+
+  for (let i = 0; i < NUM_OF_BLOCKS_PER_ROW; i++) {
+    const guessToken = guess[i];
+    const answerToken = answer[i];
+
+    if (guessToken === answerToken) {
+      history[i].state = BLOCK_STATE.IN_SOLUTION.CORRECT_SPOT;
+    } else {
+      guessCollection[guessToken] = (guessCollection[guessToken] || 0) + 1;
+      answerCollection[answerToken] = (answerCollection[answerToken] || 0) + 1;
+    }
+  }
+
+  for (let i = 0; i < NUM_OF_BLOCKS_PER_ROW; i++) {
+    if (history[i].state === BLOCK_STATE.IN_SOLUTION.CORRECT_SPOT) {
+      continue;
+    }
+
+    const guessToken = guess[i];
+    if (guessToken in answerCollection && answerCollection[guessToken] > 0) {
+      history[i].state = BLOCK_STATE.IN_SOLUTION.WRONG_SPOT;
+      answerCollection[guessToken]--;
+    } else {
+      history[i].state = BLOCK_STATE.NOT_IN_SOLUTION;
+    }
+  }
+
+  return history;
+}
+
+export { generateNewAnswer, isValidEquation, getHistoryByGuessAndAnswer };
