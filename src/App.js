@@ -8,6 +8,16 @@ import { evaluate } from "mathjs";
 import { useState, useEffect, useCallback } from "react";
 import styles from "./App.module.css";
 
+function generateNewAnswer() {
+  let answer;
+
+  do {
+    answer = generateExpression();
+  } while (!isValidEquation(answer));
+
+  return answer;
+}
+
 function generateExpression() {
   return new Array(NUM_OF_BLOCKS_PER_ROW)
     .fill(null)
@@ -19,7 +29,7 @@ function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function isValid(expression) {
+function isValidEquation(expression) {
   const subExpressions = expression.split("=");
   if (subExpressions.length < 2 || subExpressions.includes("")) {
     return false;
@@ -110,17 +120,17 @@ const App = () => {
   const isGamePaused = historyList.length === NUM_OF_ATTEMPTS || won;
 
   useEffect(() => {
-    let expression;
-    do {
-      expression = generateExpression();
-    } while (!isValid(expression));
-    setAnswer(expression);
-    console.log(expression);
+    const newAnswer = generateNewAnswer();
+    setAnswer(newAnswer);
+    console.log(newAnswer);
   }, []);
 
   const guess = useCallback(
     (userInput) => {
-      if (userInput.length !== NUM_OF_BLOCKS_PER_ROW || !isValid(userInput)) {
+      if (
+        userInput.length !== NUM_OF_BLOCKS_PER_ROW ||
+        !isValidEquation(userInput)
+      ) {
         clearTimeout(messageTimer);
         setMessage({ type: "error", content: "The guess doesn't compute" });
         messageTimer = setTimeout(() => setMessage(null), 3000);
@@ -173,7 +183,7 @@ const App = () => {
       let expression;
       do {
         expression = generateExpression();
-      } while (!isValid(expression));
+      } while (!isValidEquation(expression));
       setAnswer(expression);
       setUserInput("");
       setHistoryList([]);
