@@ -12,28 +12,34 @@
 }
 
 .innerContainer h1 {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .buttonsContainer {
   display: grid;
-  gap: 5px;
+  gap: 8px;
   grid-template-columns: repeat(2, 1fr);
   margin-bottom: 5px;
 }
 
 .inputButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   margin: 10px 0;
+}
+
+.inputButtonsRow {
   display: flex;
   gap: 5px;
 }
 
 .inputButton {
   background: rgb(226, 232, 240);
-  font-weight: bold;
-  padding: 10px;
   border-radius: 4px;
   cursor: pointer;
   flex-grow: 1;
+  font-weight: bold;
+  padding: 15px 0;
   text-align: center;
 }

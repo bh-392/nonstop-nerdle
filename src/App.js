@@ -125,7 +125,6 @@ const App = () => {
           <NewGameButton startNewGame={startNewGame} />
           <CopyLinkButton setMessage={setMessage} />
         </div>
-        <div>Special thanks: Amber Tseng</div>
 
         {message && <Message message={message} />}
       </div>
@@ -135,8 +134,8 @@ const App = () => {
 
 const Inputs = ({ handleKeyDown }) => {
   return (
-    <div>
-      <div className={styles.inputButtonsContainer}>
+    <div className={styles.inputButtonsContainer}>
+      <div className={styles.inputButtonsRow}>
         {"1234567890".split("").map((v) => (
           <div
             key={v}
@@ -147,7 +146,7 @@ const Inputs = ({ handleKeyDown }) => {
           </div>
         ))}
       </div>
-      <div className={styles.inputButtonsContainer}>
+      <div className={styles.inputButtonsRow}>
         {"+-*/="
           .split("")
           .concat("Enter", "Delete")
