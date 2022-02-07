@@ -4,56 +4,9 @@ import {
   BLOCK_TYPE,
   NUM_OF_ATTEMPTS,
 } from "./constants";
-import { evaluate } from "mathjs";
 import { useState, useEffect, useCallback } from "react";
 import styles from "./App.module.css";
-
-function generateNewAnswer() {
-  let answer;
-
-  do {
-    answer = generateExpression();
-  } while (!isValidEquation(answer));
-
-  return answer;
-}
-
-function generateExpression() {
-  return new Array(NUM_OF_BLOCKS_PER_ROW)
-    .fill(null)
-    .map(() => getRandomElement(TOKENS))
-    .join("");
-}
-
-function getRandomElement(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function isValidEquation(expression) {
-  const subExpressions = expression.split("=");
-  if (subExpressions.length < 2 || subExpressions.includes("")) {
-    return false;
-  }
-
-  try {
-    let firstExpressionResult = evaluate(subExpressions[0]);
-    /*
-    // Make zero fewer
-    if (firstExpressionResult === 0 && Math.random() > 0.5) {
-      return false;
-    }
-    */
-    for (let i = 1; i < subExpressions.length; i++) {
-      const expression = subExpressions[i];
-      if (evaluate(expression) !== firstExpressionResult) {
-        return false;
-      }
-    }
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+import { generateNewAnswer, isValidEquation } from "./utils";
 
 function compareUserInputAndAnswer(guess, answer) {
   const result = guess.split("").map((value) => ({ value, state: null }));
@@ -180,11 +133,8 @@ const App = () => {
 
   const handleNewGameButtonClick = () => {
     if (window.confirm("Are you sure to start a new game?")) {
-      let expression;
-      do {
-        expression = generateExpression();
-      } while (!isValidEquation(expression));
-      setAnswer(expression);
+      let newAnswer = generateNewAnswer();
+      setAnswer(newAnswer);
       setUserInput("");
       setHistoryList([]);
       setMessage(null);
