@@ -9,6 +9,7 @@ function generateNewAnswer() {
   } while (
     !isValidEquation(answer) ||
     hasNumberStartsWithMultipleZeros(answer) ||
+    hasConsecutiveOperators(answer) ||
     (isAnswerZero(answer) && Math.random() > 0.25)
   );
 
@@ -25,11 +26,10 @@ function generateExpression() {
 function getRandomElement(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
-console.log(evaluate('9-9*0'))
+
 function isValidEquation(expression) {
   const subExpressions = expression.split("=");
   if (subExpressions.length < 2 || subExpressions.includes("")) {
-    // console.log(expression, 1);
     return false;
   }
 
@@ -38,19 +38,27 @@ function isValidEquation(expression) {
     for (let i = 1; i < subExpressions.length; i++) {
       const subExpression = subExpressions[i];
       if (evaluate(subExpression) !== firstSubExpressionResult) {
-        // console.log(expression, 2);
         return false;
       }
     }
     return true;
   } catch (e) {
-    // console.log(expression, 3);
     return false;
   }
 }
 
 function hasNumberStartsWithMultipleZeros(answer) {
-  return ~answer.search(/[^\d]0+/);
+  return ~answer.search(/^0+/) || ~answer.search(/[^\d]0+/);
+}
+
+function hasConsecutiveOperators(answer) {
+  const cases = ["++", "-+", "*+", "/+"];
+  for (let str of cases) {
+    if (answer.includes(str)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function isAnswerZero(answer) {
