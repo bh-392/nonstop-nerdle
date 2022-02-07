@@ -143,25 +143,27 @@ const App = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h1>Nonstop Nerdle</h1>
-      <div className={styles.rowContainer}>
-        <HistoryList historyList={historyList} />
-        {(!isGamePaused || !won) && <UserInput userInput={userInput} />}
-        <PlaceholderBlocks historyList={historyList} won={won} />
+    <div className={styles.outerContainer}>
+      <div className={styles.innerContainer}>
+        <h1>Nonstop Nerdle</h1>
+        <div className={styles.rowContainer}>
+          <HistoryList historyList={historyList} />
+          {(!isGamePaused || !won) && <UserInput userInput={userInput} />}
+          <PlaceholderBlocks historyList={historyList} won={won} />
+        </div>
+        <Inputs handleKeyDown={handleKeyDown} />
+        <NewGameButton handleNewGameButtonClick={handleNewGameButtonClick} />
+        <div>Special thanks: Amber Tseng</div>
+        {/* <div>Share</div> */}
+        {(message || isGamePaused) && (
+          <Message
+            isGamePaused={isGamePaused}
+            won={won}
+            answer={answer}
+            message={message}
+          />
+        )}
       </div>
-      <Inputs handleKeyDown={handleKeyDown} />
-      <NewGameButton handleNewGameButtonClick={handleNewGameButtonClick} />
-      <div>Special thanks: Amber Tseng</div>
-      {/* <div>Share</div> */}
-      {(message || isGamePaused) && (
-        <Message
-          isGamePaused={isGamePaused}
-          won={won}
-          answer={answer}
-          message={message}
-        />
-      )}
     </div>
   );
 };
