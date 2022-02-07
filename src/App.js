@@ -2,37 +2,18 @@ import { useState, useEffect, useCallback } from "react";
 import {
   GAME_STATE,
   NUM_OF_BLOCKS_PER_ROW,
-  TOKENS,
-  BLOCK_STATE,
   NUM_OF_ATTEMPTS,
+  TOKENS,
 } from "./constants";
 import {
   generateNewAnswer,
   isValidEquation,
   getHistoryByGuessAndAnswer,
 } from "./utils";
+import RowContainer from "./components/RowContainer";
+import NewGameButton from "./components/NewGameButton";
 import Message from "./components/Message";
 import styles from "./App.module.css";
-
-function getBlockClassNameByState(state) {
-  const baseClassName = styles.block;
-
-  let additionalClassName;
-  switch (state) {
-    case BLOCK_STATE.IN_SOLUTION.CORRECT_SPOT:
-      additionalClassName = styles["block-in-solution-correct-spot"];
-      break;
-    case BLOCK_STATE.IN_SOLUTION.WRONG_SPOT:
-      additionalClassName = styles["block-in-solution-wrong-spot"];
-      break;
-    case BLOCK_STATE.NOT_IN_SOLUTION:
-      additionalClassName = styles["block-not-in-solution"];
-      break;
-    default:
-  }
-
-  return [baseClassName, additionalClassName].join(" ");
-}
 
 let messageTimer;
 
@@ -117,7 +98,7 @@ const App = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
-  const handleNewGameButtonClick = () => {
+  const startNewGame = () => {
     if (window.confirm("Are you sure to start a new game?")) {
       const newAnswer = generateNewAnswer();
 
@@ -133,83 +114,19 @@ const App = () => {
     <div className={styles.outerContainer}>
       <div className={styles.innerContainer}>
         <h1>Nonstop Nerdle</h1>
-        <div className={styles.rowContainer}>
-          <HistoryList historyList={historyList} />
-          {gameState === GAME_STATE.RUNNING && (
-            <UserInput userInput={currentGuess} />
-          )}
-          <PlaceholderRows gameState={gameState} historyList={historyList} />
-        </div>
+        <RowContainer
+          gameState={gameState}
+          currentGuess={currentGuess}
+          historyList={historyList}
+        />
         <Inputs handleKeyDown={handleKeyDown} />
-        <NewGameButton handleNewGameButtonClick={handleNewGameButtonClick} />
-        <div>Special thanks: Amber Tseng</div>
+        <NewGameButton startNewGame={startNewGame} />
         {/* <div>Share</div> */}
+        <div>Special thanks: Amber Tseng</div>
+
         {message && <Message message={message} />}
       </div>
     </div>
-  );
-};
-
-const HistoryList = ({ historyList }) => {
-  return historyList.map((rowData, i) => <Row key={i} data={rowData} />);
-};
-
-const UserInput = ({ userInput }) => {
-  const rowData = `${userInput}${" ".repeat(
-    NUM_OF_BLOCKS_PER_ROW - userInput.length
-  )}`
-    .split("")
-    .map((value) => ({ value, state: BLOCK_STATE.UNDEFINED }));
-  return <Row data={rowData} />;
-};
-
-const PlaceholderRows = ({ gameState, historyList }) => {
-  if (gameState === GAME_STATE.LOST) {
-    return null;
-  }
-
-  let numOfRows = NUM_OF_ATTEMPTS - historyList.length;
-  if (gameState === GAME_STATE.RUNNING) {
-    numOfRows--;
-  }
-
-  return numOfRows > 0
-    ? new Array(numOfRows).fill(null).map((_, i) => <PlaceholderRow key={i} />)
-    : null;
-};
-
-const Row = ({ data }) => {
-  return (
-    <div className={styles.row}>
-      {data.map(({ value, state }, i) => (
-        <div key={i} className={getBlockClassNameByState(state)}>
-          {value}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const PlaceholderRow = () => {
-  return (
-    <div className={styles.row}>
-      {new Array(NUM_OF_BLOCKS_PER_ROW).fill(null).map((_, i) => (
-        <div
-          key={i}
-          className={getBlockClassNameByState(BLOCK_STATE.UNDEFINED)}
-        >
-          {" "}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const NewGameButton = ({ handleNewGameButtonClick }) => {
-  return (
-    <button className={styles.newGameButton} onClick={handleNewGameButtonClick}>
-      New Game
-    </button>
   );
 };
 

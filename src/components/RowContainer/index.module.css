@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.row {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(8, 1fr);
+}

@@ -15,52 +15,6 @@
   margin-bottom: 15px;
 }
 
-.rowContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.row {
-  display: grid;
-  gap: 4px;
-  grid-template-columns: repeat(8, 1fr);
-}
-
-.block {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  background: rgb(152, 148, 132);
-  color: white;
-  font-weight: bold;
-  aspect-ratio: 1;
-}
-
-.block-in-solution-correct-spot {
-  background: rgb(57, 136, 116);
-}
-
-.block-in-solution-wrong-spot {
-  background: rgb(130, 4, 88);
-}
-
-.block-not-in-solution {
-  background: rgb(22, 24, 3);
-}
-
-.newGameButton {
-  padding: 10px;
-  background-color: rgb(79, 70, 229);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  margin: 10px 0;
-  cursor: pointer;
-}
-
 .inputButtonsContainer {
   margin: 10px 0;
   display: flex;

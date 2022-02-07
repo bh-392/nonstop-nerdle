@@ -1,0 +1,22 @@
+.base {
+  align-items: center;
+  aspect-ratio: 1;
+  background: rgb(152, 148, 132);
+  border-radius: 4px;
+  color: white;
+  display: flex;
+  font-weight: bold;
+  justify-content: center;
+}
+
+.in-solution-correct-spot {
+  background: rgb(57, 136, 116);
+}
+
+.in-solution-wrong-spot {
+  background: rgb(130, 4, 88);
+}
+
+.not-in-solution {
+  background: rgb(22, 24, 3);
+}
