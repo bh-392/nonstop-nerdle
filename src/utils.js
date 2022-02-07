@@ -6,7 +6,10 @@ function generateNewAnswer() {
 
   do {
     answer = generateExpression();
-  } while (!isValidEquation(answer));
+  } while (
+    !isValidEquation(answer) ||
+    (isAnswerZero(answer) && Math.random() > 0.25)
+  );
 
   return answer;
 }
@@ -40,6 +43,10 @@ function isValidEquation(expression) {
   } catch (e) {
     return false;
   }
+}
+
+function isAnswerZero(answer) {
+  return evaluate(answer.split("=")[0]) === 0;
 }
 
 function getHistoryByGuessAndAnswer(guess, answer) {
