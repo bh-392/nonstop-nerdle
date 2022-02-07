@@ -1,4 +1,4 @@
-import styles from "./NewGameButton.module.css";
+import Button from "./Button";
 
 const NewGameButton = ({ startNewGame }) => {
   const handleClick = (e) => {
@@ -6,11 +6,7 @@ const NewGameButton = ({ startNewGame }) => {
     startNewGame();
   };
 
-  return (
-    <button className={styles.button} onClick={handleClick}>
-      New Game
-    </button>
-  );
+  return <Button onClick={handleClick}>New Game</Button>;
 };
 
 export default NewGameButton;

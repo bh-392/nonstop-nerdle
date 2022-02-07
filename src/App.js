@@ -12,6 +12,7 @@ import {
 } from "./utils";
 import RowContainer from "./components/RowContainer";
 import NewGameButton from "./components/NewGameButton";
+import CopyLinkButton from "./components/CopyLinkButton";
 import Message from "./components/Message";
 import styles from "./App.module.css";
 
@@ -120,8 +121,10 @@ const App = () => {
           historyList={historyList}
         />
         <Inputs handleKeyDown={handleKeyDown} />
-        <NewGameButton startNewGame={startNewGame} />
-        {/* <div>Share</div> */}
+        <div className={styles.buttonsContainer}>
+          <NewGameButton startNewGame={startNewGame} />
+          <CopyLinkButton setMessage={setMessage} />
+        </div>
         <div>Special thanks: Amber Tseng</div>
 
         {message && <Message message={message} />}
