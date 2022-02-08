@@ -12,12 +12,13 @@
 }
 
 .innerContainer h1 {
+  color: var(--title-font-color);
   margin-bottom: 20px;
 }
 
 .buttonsContainer {
   display: grid;
   gap: 8px;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   margin-bottom: 5px;
 }

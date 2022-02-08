@@ -8,6 +8,7 @@ import {
   NUM_OF_BLOCKS_PER_ROW,
   NUM_OF_ATTEMPTS,
   TOKENS,
+  THEME_OPTIONS,
 } from "./constants";
 import {
   generateNewAnswer,
@@ -18,8 +19,9 @@ import RowContainer from "./components/RowContainer";
 import Keyboard from "./components/Keyboard";
 import NewGameButton from "./components/NewGameButton";
 import CopyLinkButton from "./components/CopyLinkButton";
+import ThemeButton from "./components/ThemeButton";
 import Message from "./components/Message";
-// import Modal from "./components/Modal";
+import ThemeModal from "./components/ThemeModal";
 import styles from "./App.module.css";
 
 let messageTimer;
@@ -42,6 +44,8 @@ const App = () => {
     }))
   );
   const [message, setMessage] = useState(null);
+  const [currentTheme, setCurrentTheme] = useState(THEME_OPTIONS[0]);
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
 
   useEffect(() => {
     const newAnswer = generateNewAnswer();
@@ -153,6 +157,20 @@ const App = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === null) {
+      localStorage.setItem("theme", THEME_OPTIONS[0]);
+    } else {
+      setCurrentTheme(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.body.dataset.theme = currentTheme;
+  }, [currentTheme]);
+
   const startNewGame = () => {
     if (window.confirm("Are you sure to start a new game?")) {
       const newAnswer = generateNewAnswer();
@@ -194,10 +212,16 @@ const App = () => {
         <div className={styles.buttonsContainer}>
           <NewGameButton startNewGame={startNewGame} />
           <CopyLinkButton setMessage={setMessage} />
+          <ThemeButton setIsThemeModalOpen={setIsThemeModalOpen} />
         </div>
 
         {message && <Message message={message} />}
-        {/* <Modal message={message} /> */}
+        {isThemeModalOpen && (
+          <ThemeModal
+            setCurrentTheme={setCurrentTheme}
+            setIsThemeModalOpen={setIsThemeModalOpen}
+          />
+        )}
       </div>
     </div>
   );

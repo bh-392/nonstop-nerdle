@@ -30,6 +30,12 @@ export const KEYBOARD_SECOND_ROW_BUTTONS = "+-*/="
 export const NUM_OF_ATTEMPTS = 6;
 export const NUM_OF_BLOCKS_PER_ROW = 8;
 
+export const THEME_OPTIONS = [
+  "Default (light)",
+  "Default (dark)",
+  // "CakeResume",
+];
+
 export const TOKENS = [
   "1",
   "2",

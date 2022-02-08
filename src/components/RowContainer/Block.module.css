@@ -1,22 +1,25 @@
 .base {
   align-items: center;
   aspect-ratio: 1;
-  background: rgb(152, 148, 132);
+  background: var(--block-base-background-color);
   border-radius: 4px;
-  color: white;
+  color: var(--block-base-font-color);
   display: flex;
   font-weight: bold;
   justify-content: center;
 }
 
 .in-solution-correct-spot {
-  background: rgb(57, 136, 116);
+  background: var(--block-in-solution-correct-spot-background-color);
+  color: var(--block-in-solution-correct-spot-font-color);
 }
 
 .in-solution-wrong-spot {
-  background: rgb(130, 4, 88);
+  background: var(--block-in-solution-wrong-spot-background-color);
+  color: var(--block-in-solution-wrong-spot-font-color);
 }
 
 .not-in-solution {
-  background: rgb(22, 24, 3);
+  background: var(--block-not-in-solution-background-color);
+  color: var(--block-not-in-solution-font-color);
 }
