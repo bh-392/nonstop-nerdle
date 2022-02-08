@@ -1,4 +1,4 @@
-import { KEYBOARD_BUTTON_STATE } from "./constants";
+import { KEYBOARD_BUTTON_STATE } from "../constants";
 import styles from "./Keyboard.module.css";
 
 function getKeyboardButtonClassNameByState(state) {

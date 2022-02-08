@@ -15,10 +15,11 @@ import {
   getHistoryByGuessAndAnswer,
 } from "./utils";
 import RowContainer from "./components/RowContainer";
-import Keyboard from "./Keyboard";
+import Keyboard from "./components/Keyboard";
 import NewGameButton from "./components/NewGameButton";
 import CopyLinkButton from "./components/CopyLinkButton";
 import Message from "./components/Message";
+// import Modal from "./components/Modal";
 import styles from "./App.module.css";
 
 let messageTimer;
@@ -196,6 +197,7 @@ const App = () => {
         </div>
 
         {message && <Message message={message} />}
+        {/* <Modal message={message} /> */}
       </div>
     </div>
   );
