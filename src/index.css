@@ -24,7 +24,7 @@ p {
   margin: 0;
 }
 
-body[data-theme="Default (light)"] {
+body[data-theme="Default (Light)"] {
   --body-background-color: white;
   --title-font-color: black;
   --block-base-background-color: rgb(152, 148, 132);
@@ -37,7 +37,7 @@ body[data-theme="Default (light)"] {
   --block-not-in-solution-font-color: white;
 }
 
-body[data-theme="Default (dark)"] {
+body[data-theme="Default (Dark)"] {
   --body-background-color: rgb(31, 41, 55);
   --title-font-color: rgb(215, 218, 220);
   --block-base-background-color: rgb(152, 148, 132);
@@ -48,4 +48,17 @@ body[data-theme="Default (dark)"] {
   --block-in-solution-wrong-spot-font-color: white;
   --block-not-in-solution-background-color: rgb(22, 24, 3);
   --block-not-in-solution-font-color: white;
+}
+
+body[data-theme="CakeResume"] {
+  --body-background-color: #f8f8f8;
+  --title-font-color: #13ab67;
+  --block-base-background-color: #f4ca78;
+  --block-base-font-color: black;
+  --block-in-solution-correct-spot-background-color: #13ab67;
+  --block-in-solution-correct-spot-font-color: #f8f8f8;
+  --block-in-solution-wrong-spot-background-color: #d04a4b;
+  --block-in-solution-wrong-spot-font-color: #f8f8f8;
+  --block-not-in-solution-background-color: #454d4a;
+  --block-not-in-solution-font-color: #f8f8f8;
 }

@@ -31,8 +31,8 @@ export const NUM_OF_ATTEMPTS = 6;
 export const NUM_OF_BLOCKS_PER_ROW = 8;
 
 export const THEME_OPTIONS = [
-  "Default (light)",
-  "Default (dark)",
+  "Default (Light)",
+  "Default (Dark)",
   // "CakeResume",
 ];
 
