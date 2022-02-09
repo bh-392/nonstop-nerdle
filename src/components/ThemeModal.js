@@ -21,7 +21,7 @@ const Modal = ({ setCurrentTheme, setIsThemeModalOpen }) => {
   return (
     <div className={styles.overlay} onClick={handleCloseModalByClickingOverlay}>
       <div className={styles.container}>
-        <p>Theme</p>
+        <p className={styles.title}>Theme</p>
         {THEME_OPTIONS.map((theme) => (
           <Button
             key={theme}
