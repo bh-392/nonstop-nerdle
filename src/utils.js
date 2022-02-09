@@ -17,10 +17,13 @@ function generateNewAnswer() {
     (isAnswerZero(answer) && Math.random() > 0.25)
   );
 
-  console.log(
-    `generate new answer: ${attemptTimes} attempts, ${new Date() - startTime}ms`
-  );
-  return answer;
+  return {
+    answer,
+    attemptTimes,
+    generatingLog: `Generate new answer: ${attemptTimes} attempts in ${
+      new Date() - startTime
+    }ms, answer: ${answer}`,
+  };
 }
 
 function generateExpression() {

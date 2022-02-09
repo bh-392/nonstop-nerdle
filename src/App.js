@@ -20,6 +20,7 @@ import Keyboard from "./components/Keyboard";
 import NewGameButton from "./components/NewGameButton";
 import CopyLinkButton from "./components/CopyLinkButton";
 import ThemeButton from "./components/ThemeButton";
+import DevelopmentLog from "./components/DevelopmentLog";
 import Message from "./components/Message";
 import ThemeModal from "./components/ThemeModal";
 import styles from "./App.module.css";
@@ -46,11 +47,18 @@ const App = () => {
   const [message, setMessage] = useState(null);
   const [currentTheme, setCurrentTheme] = useState(THEME_OPTIONS[0]);
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+  const [isInDevelopmentMode, setIsInDevelopmentMode] = useState(false);
+  const [developmentLog, setDevelopmentLog] = useState("");
 
   useEffect(() => {
-    const newAnswer = generateNewAnswer();
+    const { answer: newAnswer, generatingLog } = generateNewAnswer();
     setAnswer(newAnswer);
-    console.log(newAnswer);
+    setDevelopmentLog(generatingLog);
+
+    const websiteURL = new URL(document.URL);
+    if (websiteURL.searchParams.get("mode") === "development") {
+      setIsInDevelopmentMode(true);
+    }
   }, []);
 
   const reduceKeyboardStateHelper = (newHistory, blockState, buttonState) => {
@@ -173,7 +181,9 @@ const App = () => {
 
   const startNewGame = () => {
     if (window.confirm("Are you sure to start a new game?")) {
-      const newAnswer = generateNewAnswer();
+      const { answer: newAnswer, generatingLog } = generateNewAnswer();
+      setAnswer(newAnswer);
+      setDevelopmentLog(generatingLog);
 
       setGameState(GAME_STATE.RUNNING);
       setAnswer(newAnswer);
@@ -214,6 +224,7 @@ const App = () => {
           <CopyLinkButton setMessage={setMessage} />
           <ThemeButton setIsThemeModalOpen={setIsThemeModalOpen} />
         </div>
+        {isInDevelopmentMode && <DevelopmentLog log={developmentLog} />}
 
         {message && <Message message={message} />}
         {isThemeModalOpen && (
