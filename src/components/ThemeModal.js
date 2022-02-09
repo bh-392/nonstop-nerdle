@@ -23,7 +23,11 @@ const Modal = ({ setCurrentTheme, setIsThemeModalOpen }) => {
       <div className={styles.container}>
         <p>Theme</p>
         {THEME_OPTIONS.map((theme) => (
-          <Button key={theme} onClick={() => handleSetTheme(theme)}>
+          <Button
+            key={theme}
+            onClick={() => handleSetTheme(theme)}
+            additionalStyle={{ paddingLeft: 40, paddingRight: 40 }}
+          >
             {theme}
           </Button>
         ))}
