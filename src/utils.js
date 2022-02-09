@@ -2,17 +2,24 @@ import { NUM_OF_BLOCKS_PER_ROW, TOKENS, BLOCK_STATE } from "./constants";
 import { evaluate } from "mathjs";
 
 function generateNewAnswer() {
+  const startTime = new Date();
   let answer;
+  let attemptTimes = 0;
 
   do {
     answer = generateExpression();
+    attemptTimes++;
   } while (
     !isValidEquation(answer) ||
     hasNumberStartsWithMultipleZeros(answer) ||
     hasConsecutiveOperators(answer) ||
+    hasLeadingSign(answer) ||
     (isAnswerZero(answer) && Math.random() > 0.25)
   );
 
+  console.log(
+    `generate new answer: ${attemptTimes} attempts, ${new Date() - startTime}ms`
+  );
   return answer;
 }
 
@@ -52,13 +59,17 @@ function hasNumberStartsWithMultipleZeros(answer) {
 }
 
 function hasConsecutiveOperators(answer) {
-  const cases = ["++", "-+", "*+", "/+"];
+  const cases = ["++", "+-", "-+", "--", "*+", "/+"];
   for (let str of cases) {
     if (answer.includes(str)) {
       return true;
     }
   }
   return false;
+}
+
+function hasLeadingSign(answer) {
+  return answer.startsWith("+") || answer.startsWith("-");
 }
 
 function isAnswerZero(answer) {
