@@ -62,7 +62,7 @@ function hasNumberStartsWithMultipleZeros(answer) {
 }
 
 function hasConsecutiveOperators(answer) {
-  const cases = ["++", "+-", "-+", "--", "*+", "/+"];
+  const cases = ["++", "+-", "-+", "--", "*+", "/+", "=+"];
   for (let str of cases) {
     if (answer.includes(str)) {
       return true;
