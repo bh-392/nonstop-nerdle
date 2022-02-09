@@ -53,3 +53,17 @@ export const TOKENS = [
   "/",
   "=",
 ];
+
+const exportedConstants = {
+  BLOCK_STATE,
+  KEYBOARD_BUTTON_STATE,
+  GAME_STATE,
+  KEYBOARD_FIRST_ROW_BUTTONS,
+  KEYBOARD_SECOND_ROW_BUTTONS,
+  NUM_OF_ATTEMPTS,
+  NUM_OF_BLOCKS_PER_ROW,
+  THEME_OPTIONS,
+  TOKENS,
+};
+
+export default exportedConstants;
